@@ -1,5 +1,8 @@
+import os
 import pycountry
 import simplejson as json
+
+root = os.path.dirname(os.path.abspath(__file__))
 
 country_iso2_2_fullname = dict()
 country_fullname_2_iso2 = dict()
@@ -22,23 +25,22 @@ for l in pycountry.subdivisions:
         country_subdiv_fullname[l.country.name].append(l.name)
 
     if l.country.alpha2 not in country_subdiv_iso:
-        country_subdiv_iso[l.country.alpha2] = [l.code]
+        country_subdiv_iso[l.country.alpha2] = [l.code.split('-')[1]]
     else:
-        country_subdiv_iso[l.country.alpha2].append(l.code)
+        country_subdiv_iso[l.country.alpha2].append(l.code.split('-')[1])
 
 def save_2_json(file_name, data):
     with open(file_name, 'wb') as output:
         json.dump(data, output, indent=2)
 
 def main(save_path):
-    save_2_json(save_path+'country_iso2_2_fullname.json', country_iso_2_full_name)
+    save_2_json(save_path+'country_iso2_2_fullname.json', country_iso2_2_fullname)
     save_2_json(save_path+'country_fullname_2_iso2.json', country_fullname_2_iso2)
     save_2_json(save_path+'subdiv_fullname_2_iso.json', subdiv_fullname_2_iso)
     save_2_json(save_path+'subdiv_iso_2_fullname.json', subdiv_iso_2_fullname)
     save_2_json(save_path+'country_subdiv_iso.json', country_subdiv_iso)
     save_2_json(save_path+'country_subdiv_fullname.json', country_subdiv_fullname)
 
-if __name__ == '__main__':
-    save_path = '/User/kanyu/Documents/Branch.io/adhoc/'
-    main(save_path)
+if __name__ == '__main__':    
+    main(os.path.join(root, 'data/'))
 
